@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3307:3306"  # Проброс порта MySQL на хосте
+    volumes:
+      - db_data:/var/lib/mysql  # Том для хранения данных MySQL
+    environment:
+      MYSQL_ROOT_PASSWORD: admin  # Пароль для root пользователя MySQL
+      MYSQL_DATABASE: docker_wordpress_db   # Имя базы данных
+      MYSQL_USER: wordpress       # Пользователь MySQL
+      MYSQL_PASSWORD: admin   # Пароль для пользователя MySQL
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - mysql
+    ports:
+      - "8000:80"  # Проброс порта WordPress на хосте
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306  # Хост и порт MySQL
+      WORDPRESS_DB_USER: wordpress   # Пользователь MySQL
+      WORDPRESS_DB_PASSWORD: admin  # Пароль пользователя MySQL
+      WORDPRESS_DB_NAME: docker_wordpress_db   # Имя базы данных
+    volumes:
+      - wordpress_data:/var/www/html  # Том для данных WordPress
+      - ./theme/:/var/www/html/wp-content/themes/vitaliy  # Проброс пользовательской темы
+      - ./plugin/:/var/www/html/wp-content/plugins/vitaliy-core  # Проброс пользовательского плагина
+      - ./.srv/custom.ini:/usr/local/etc/php/conf.d/custom.ini  # Проброс пользовательского файла конфигурации PHP
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    ports:
+      - "8181:80"  # Проброс порта phpMyAdmin на хосте
+    environment:
+      PMA_HOST: mysql  # Хост MySQL
+      MYSQL_ROOT_PASSWORD: admin  # Пароль root пользователя MySQL
+      MYSQL_USERNAME: wordpress
+
+volumes:
+  db_data: {}
+  wordpress_data: {}

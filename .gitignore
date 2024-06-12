@@ -1,0 +1,30 @@
+.DS_Store
+.idea/
+
+# Node Modules
+node_modules
+
+/.srv/*
+!/.srv/wordpress
+!/.srv/custom.ini
+
+.srv/wordpress/license.txt
+.srv/wordpress/readme.html
+.srv/wordpress/xmlrpc.php
+
+# Configuration
+.srv/wordpress/wp-config.php
+
+.srv/wordpress/wp-content/et-cache/
+
+# Example themes
+.srv/wordpress/wp-content/themes/twenty*/
+
+.srv/wordpress/wp-content/themes/flymonroecounty/gulp/
+
+# Example plugin
+.srv/wordpress/wp-content/plugins/hello.php
+
+# Log files
+*.log
+
